@@ -1,0 +1,29 @@
+{
+  "name": "vr-e-commerce",
+  "version": "1.0.0",
+  "description": "Full-stack MVP for VR E-Commerce static storefront",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "jest --runInBand"
+  },
+  "dependencies": {
+    "bcryptjs": "3.0.3",
+    "cookie-parser": "1.4.7",
+    "cors": "2.8.6",
+    "express": "5.2.1",
+    "jsonwebtoken": "9.0.3",
+    "sqlite3": "6.0.1"
+  },
+  "devDependencies": {
+    "jest": "30.4.2",
+    "supertest": "7.2.2"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/test/**/*.test.js"
+    ]
+  }
+}
