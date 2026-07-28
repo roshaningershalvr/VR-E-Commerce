@@ -98,9 +98,19 @@ function createAuthAndCartUI() {
 }
 
 async function api(path, options = {}) {
+  const csrfToken = document.cookie
+    .split(';')
+    .map(part => part.trim())
+    .find(part => part.startsWith('csrf_token='))
+    ?.split('=')[1];
+  const method = (options.method || 'GET').toUpperCase();
   const res = await fetch(path, {
     credentials: 'include',
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+    headers: {
+      'Content-Type': 'application/json',
+      ...(method !== 'GET' && csrfToken ? { 'X-CSRF-Token': decodeURIComponent(csrfToken) } : {}),
+      ...(options.headers || {})
+    },
     ...options
   });
   const data = await res.json().catch(() => ({}));
