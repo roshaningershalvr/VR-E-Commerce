@@ -11,6 +11,7 @@ const PORT = Number(process.env.PORT || 3000);
 const DB_DIR = path.join(__dirname, 'data');
 const DB_PATH = path.join(DB_DIR, 'store.db');
 const SCHEMA_PATH = path.join(__dirname, 'schema.sql');
+const INDEX_PATH = path.join(__dirname, 'index.html');
 
 if (!fs.existsSync(DB_DIR)) fs.mkdirSync(DB_DIR, { recursive: true });
 const db = new sqlite3.Database(DB_PATH);
@@ -91,7 +92,11 @@ function sha256(value) {
   return crypto.createHash('sha256').update(value).digest('hex');
 }
 
-app.get('/', rateLimit({ windowMs: 60_000, maxRequests: 240 }), (_req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+const cachedIndexHtml = fs.readFileSync(INDEX_PATH, 'utf8');
+app.get('/', (_req, res) => {
+  res.type('html');
+  res.send(cachedIndexHtml);
+});
 
 function createSessionToken() {
   return crypto.randomBytes(32).toString('hex');
