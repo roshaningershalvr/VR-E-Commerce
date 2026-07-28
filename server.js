@@ -69,7 +69,6 @@ async function initializeDatabase() {
 app.use(express.json());
 app.use(cookieParser());
 app.use('/assets', express.static(path.join(__dirname, 'assets'), { index: false }));
-app.get('/', (_req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
 const rateLimitBucket = new Map();
 function rateLimit({ windowMs, maxRequests }) {
@@ -91,6 +90,8 @@ function rateLimit({ windowMs, maxRequests }) {
 function sha256(value) {
   return crypto.createHash('sha256').update(value).digest('hex');
 }
+
+app.get('/', rateLimit({ windowMs: 60_000, maxRequests: 240 }), (_req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
 function createSessionToken() {
   return crypto.randomBytes(32).toString('hex');
